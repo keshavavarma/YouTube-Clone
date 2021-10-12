@@ -1,15 +1,27 @@
 import React from "react";
 import "./_sidebar.scss";
 import {
-  MdSubscriptions,
   MdExitToApp,
   MdThumbUp,
-  MdHistory,
-  MdLibraryBooks,
+  MdOutlineWatchLater,
   MdHome,
+  MdOutlineExplore,
 } from "react-icons/md";
+import { RiPlayList2Fill } from "react-icons/ri";
+import { useHistory } from "react-router";
 
-const Sidebar = ({ sidebar, handleToggleSidebar }) => {
+const Sidebar = ({ sidebar, handleToggleSidebar, logout }) => {
+  const history = useHistory();
+
+  const logoutHandler = async () => {
+    try {
+      await logout();
+      history.push("/Login");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <nav
       className={sidebar ? "sidebar open" : "sidebar"}
@@ -20,30 +32,32 @@ const Sidebar = ({ sidebar, handleToggleSidebar }) => {
         <span>Home</span>
       </li>
       <li>
-        <MdSubscriptions size={23} />
-        <span>Subscriptions</span>
+        <MdOutlineExplore size={23} />
+        <span>Explore</span>
       </li>
 
       <li>
         <MdThumbUp size={23} />
-        <span>Liked Video</span>
+        <span>Liked Videos</span>
       </li>
 
       <li>
-        <MdHistory size={23} />
-        <span>History</span>
+        <MdOutlineWatchLater size={23} />
+        <span>Watch Later</span>
       </li>
 
       <li>
-        <MdLibraryBooks size={23} />
-        <span>Library</span>
+        <RiPlayList2Fill size={23} />
+        <span>PlayList</span>
       </li>
 
       <hr />
 
       <li>
         <MdExitToApp size={23} />
-        <span>Log Out</span>
+        <span role="button" onClick={logoutHandler}>
+          Log Out
+        </span>
       </li>
 
       <hr />

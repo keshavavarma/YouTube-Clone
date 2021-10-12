@@ -6,7 +6,7 @@ const HomeScreen = () => {
   return (
     <div>
       <Container>
-        <CategoriesBar />
+        {/* <CategoriesBar /> */}
         <Row>
           {[...new Array(20)].map(() => (
             <Col lg={3} md={4}>
