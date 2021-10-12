@@ -1,23 +1,76 @@
-import React from "react";
-import thumbnail from "../../images/sheldoncooper.jpeg";
-import channelImage from "../../images/captainhook.jpeg";
+import React, { useEffect, useState } from "react";
 import "./_video.scss";
+import moment from "moment";
+import numeral from "numeral";
+import { request } from "../../api";
 
-const Video = () => {
+const Video = ({ video }) => {
+  const {
+    id,
+    snippet: {
+      channelId,
+      channelTitle,
+      title,
+      publishedAt,
+      thumbnails: { medium },
+    },
+    contentDetails,
+  } = video;
+
+  const [views, setViews] = useState(null);
+  const [duration, setDuration] = useState(null);
+  const [channelIcon, setChannelIcon] = useState(null);
+
+  const seconds = moment.duration(duration).asSeconds();
+  const formatedDuration = moment.utc(seconds * 1000).format("mm:ss");
+
+  const videoId = id?.videoId || contentDetails?.videoId || id;
+
+  useEffect(() => {
+    const get_video_details = async () => {
+      const {
+        data: { items },
+      } = await request("/videos", {
+        params: {
+          part: "contentDetails,statistics",
+          id: videoId,
+        },
+      });
+      setDuration(items[0].contentDetails.duration);
+      setViews(items[0].statistics.viewCount);
+    };
+    get_video_details();
+  }, [videoId]);
+
+  useEffect(() => {
+    const get_channel_icon = async () => {
+      const {
+        data: { items },
+      } = await request("/channels", {
+        params: {
+          part: "snippet",
+          id: channelId,
+        },
+      });
+      setChannelIcon(items[0].snippet.thumbnails.default);
+    };
+    get_channel_icon();
+  }, [channelId]);
+
   return (
     <div className="video">
       <div className="video__top">
-        <img src={thumbnail} alt="thumbnail" />
-        <span>07:10</span>
+        <img src={medium.url} alt="thumbnail" />
+        <span>{formatedDuration}</span>
       </div>
-      <div className="video__title">Best sheldoncooper moments</div>
+      <div className="video__title">{title}</div>
       <div className="video__details">
-        <span>12m Views •</span>
-        <span>2 months ago</span>
+        <span>{numeral(views).format("0.a")} Views • </span>
+        <span> {moment(publishedAt).fromNow()}</span>
       </div>
       <div className="video__channel">
-        <img src={channelImage} alt="channel" />
-        <p>Captain Hook</p>
+        <img src={channelIcon?.url} alt="channel" />
+        <p>{channelTitle}</p>
       </div>
     </div>
   );
