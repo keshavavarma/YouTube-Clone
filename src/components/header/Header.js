@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./_header.scss";
 import { FaBars } from "react-icons/fa";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdNotifications, MdApps } from "react-icons/md";
 import Avatar from "@mui/material/Avatar";
 import { useAuth } from "../../contexts/AuthContext";
+import { useHistory } from "react-router";
 
 const Header = ({ handleToggleSidebar }) => {
   const { currentUser } = useAuth();
+  const inputRef = useRef();
+  const history = useHistory();
+
+  const searchHandler = (e) => {
+    e.preventDefault();
+    history.push(`/search/${inputRef.current.value}`);
+  };
+
   return (
     <div className="header ">
       <FaBars
@@ -22,8 +31,13 @@ const Header = ({ handleToggleSidebar }) => {
         className="header__logo"
       />
 
-      <form>
-        <input type="text" placeholder="Search" />
+      <form onSubmit={searchHandler}>
+        <input
+          type="text"
+          placeholder="Search"
+          ref={inputRef}
+          onChange={(e) => (inputRef.current.value = e.target.value)}
+        />
         <button type="submit">
           <AiOutlineSearch size={22} />
         </button>

@@ -3,8 +3,10 @@ import "./_video.scss";
 import moment from "moment";
 import numeral from "numeral";
 import { request } from "../../api";
-
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useHistory } from "react-router";
 const Video = ({ video }) => {
+  const history = useHistory();
   const {
     id,
     snippet: {
@@ -57,11 +59,16 @@ const Video = ({ video }) => {
     get_channel_icon();
   }, [channelId]);
 
+  const videoClickHandler = () => {
+    history.push(`/watch/${videoId}`);
+  };
+
   return (
-    <div className="video">
+    <div className="video" onClick={videoClickHandler}>
       <div className="video__top">
-        <img src={medium.url} alt="thumbnail" />
-        <span>{formatedDuration}</span>
+        {/* <img src={medium.url} alt="thumbnail" /> */}
+        <LazyLoadImage src={medium.url} alt="thumbnail" effect="blur" />
+        <span className="video__top__duration">{formatedDuration}</span>
       </div>
       <div className="video__title">{title}</div>
       <div className="video__details">
@@ -69,7 +76,8 @@ const Video = ({ video }) => {
         <span> {moment(publishedAt).fromNow()}</span>
       </div>
       <div className="video__channel">
-        <img src={channelIcon?.url} alt="channel" />
+        {/* <img src={channelIcon?.url} alt="channel" /> */}
+        <LazyLoadImage src={channelIcon?.url} alt="channel" effect="blur" />
         <p>{channelTitle}</p>
       </div>
     </div>

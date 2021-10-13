@@ -53,11 +53,9 @@ const Sidebar = ({ sidebar, handleToggleSidebar, logout }) => {
 
       <hr />
 
-      <li>
+      <li role="button" onClick={logoutHandler}>
         <MdExitToApp size={23} />
-        <span role="button" onClick={logoutHandler}>
-          Log Out
-        </span>
+        <span>Log Out</span>
       </li>
 
       <hr />
