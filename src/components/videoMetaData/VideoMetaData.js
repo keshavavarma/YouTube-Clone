@@ -18,6 +18,10 @@ const VideoMetaData = ({
   videoId,
   watchLaterHandler,
   likedHandler,
+  unlikeHandler,
+  removeWatchLater,
+  watchLaterVideos,
+  likedVideos,
 }) => {
   const {
     channelId,
@@ -63,14 +67,19 @@ const VideoMetaData = ({
 
           <div>
             <span className="mr-3">
-              {liked ? (
+              {likedVideos &&
+              likedVideos.filter((video) => video.id === videoId).length !==
+                0 ? (
                 <MdThumbUp
                   size={30}
                   style={{
                     marginRight: "0.5rem",
                     color: "aquamarine",
                   }}
-                  onClick={() => setLiked(!liked)}
+                  onClick={() => {
+                    unlikeHandler();
+                    // setLiked(!liked);
+                  }}
                 />
               ) : (
                 <MdOutlineThumbUpAlt
@@ -84,21 +93,23 @@ const VideoMetaData = ({
                       publishedAt,
                       medium
                     );
-                    setLiked(!liked);
+                    // setLiked(!liked);
                   }}
                   style={{
                     marginRight: "0.5rem",
                   }}
                 />
               )}
-              {watchLater ? (
+              {watchLaterVideos &&
+              watchLaterVideos.filter((video) => video.id === videoId)
+                .length !== 0 ? (
                 <MdWatchLater
                   size={30}
                   style={{
                     marginRight: "0.5rem",
                     color: "aquamarine",
                   }}
-                  onClick={() => setWatchLater(!watchLater)}
+                  onClick={() => removeWatchLater()}
                 />
               ) : (
                 <MdOutlineWatchLater
@@ -112,7 +123,7 @@ const VideoMetaData = ({
                       publishedAt,
                       medium
                     );
-                    setWatchLater(!watchLater);
+                    // setWatchLater(!watchLater);
                   }}
                   style={{
                     marginRight: "0.5rem",

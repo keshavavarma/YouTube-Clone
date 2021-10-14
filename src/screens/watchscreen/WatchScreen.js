@@ -10,13 +10,23 @@ import "./_watchScreen.scss";
 import { getRelatedVideos, getVideoByID } from "../../api";
 import { db } from "../../firebase";
 import { useAuth } from "../../contexts/AuthContext";
-import { collection, query, addDoc, deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  addDoc,
+  deleteDoc,
+  doc,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 
 const WatchScreen = () => {
   const { currentUser } = useAuth();
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [video, setVideo] = useState();
+  const [watchLaterVideos, setWatchLaterVideos] = useState();
+  const [likedVideos, setLikedVideos] = useState();
   const [relatedVideos, setRelatedVideos] = useState();
   const [docID, setDocID] = useState();
 
@@ -94,13 +104,57 @@ const WatchScreen = () => {
     });
   };
 
-  // const unlikeHandler = async (id) => {
-  //   await deleteDoc(doc(db, `users/${currentUser.uid}/liked/${id}`));
-  // };
+  const unlikeHandler = async () => {
+    const q = query(
+      collection(db, `users/${currentUser.uid}/liked`),
+      where("id", "==", id)
+    );
+    await deleteDoc(q);
+  };
+
+  const removeWatchLater = async () => {
+    const q = query(
+      collection(db, `users/${currentUser.uid}/watchLater`),
+      where("id", "==", id)
+    );
+    await deleteDoc(q);
+  };
+
+  const getWatchLaterVideos = async () => {
+    const q = query(collection(db, `users/${currentUser.uid}/watchLater`));
+    const unsub = onSnapshot(q, (snapshot) => {
+      setWatchLaterVideos(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      );
+    });
+    setLoading(false);
+    console.log(watchLaterVideos);
+    return unsub;
+  };
+
+  const getLikedVideos = async () => {
+    const q = query(collection(db, `users/${currentUser.uid}/liked`));
+    const unsub = onSnapshot(q, (snapshot) => {
+      setLikedVideos(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      );
+    });
+    setLoading(false);
+    console.log(likedVideos);
+    return unsub;
+  };
 
   useEffect(() => {
     getSelectedVideo();
     getRecomendations();
+    getWatchLaterVideos();
+    getLikedVideos();
   }, [id]);
 
   return (
@@ -125,6 +179,10 @@ const WatchScreen = () => {
             videoId={id}
             watchLaterHandler={watchLaterHandler}
             likedHandler={likedHandler}
+            unlikeHandler={unlikeHandler}
+            removeWatchLater={removeWatchLater}
+            watchLaterVideos={watchLaterVideos}
+            likedVideos={likedVideos}
           />
         ) : (
           <h6>Loading...</h6>
