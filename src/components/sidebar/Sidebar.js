@@ -27,29 +27,29 @@ const Sidebar = ({ sidebar, handleToggleSidebar, logout }) => {
       className={sidebar ? "sidebar open" : "sidebar"}
       onClick={() => handleToggleSidebar(false)}
     >
-      <li>
+      <li role="button" onClick={() => history.push("/")}>
         <MdHome size={23} />
         <span>Home</span>
       </li>
-      <li>
+      {/* <li>
         <MdOutlineExplore size={23} />
         <span>Explore</span>
-      </li>
+      </li> */}
 
-      <li>
+      <li role="button" onClick={() => history.push("/liked")}>
         <MdThumbUp size={23} />
         <span>Liked Videos</span>
       </li>
 
-      <li>
+      <li role="button" onClick={() => history.push("/watchLater")}>
         <MdOutlineWatchLater size={23} />
         <span>Watch Later</span>
       </li>
 
-      <li>
+      {/* <li>
         <RiPlayList2Fill size={23} />
         <span>PlayList</span>
-      </li>
+      </li> */}
 
       <hr />
 

@@ -8,6 +8,8 @@ import Register from "./components/authentication/Register";
 import ProtectedRoute from "./components/authentication/ProtectedRoute";
 import WatchScreen from "./screens/watchscreen/WatchScreen";
 import SearchScreen from "./screens/searchScreen/SearchScreen";
+import WatchLaterScreen from "./screens/watchLaterScreen/WatchLaterScreen";
+import LikedVideoScreen from "./screens/likedVideosScreen/LikedVideoScreen";
 
 function App() {
   return (
@@ -17,6 +19,16 @@ function App() {
           <ProtectedRoute exact path="/">
             <Layout>
               <HomeScreen />
+            </Layout>
+          </ProtectedRoute>
+          <ProtectedRoute path="/watchLater">
+            <Layout>
+              <WatchLaterScreen />
+            </Layout>
+          </ProtectedRoute>
+          <ProtectedRoute path="/liked">
+            <Layout>
+              <LikedVideoScreen />
             </Layout>
           </ProtectedRoute>
           <ProtectedRoute exact path="/watch/:id">

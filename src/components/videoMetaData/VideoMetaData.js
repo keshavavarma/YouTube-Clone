@@ -2,17 +2,38 @@ import React, { useEffect, useState } from "react";
 import "./_videoMetaData.scss";
 import moment from "moment";
 import numeral from "numeral";
-
-import { MdThumbUp, MdThumbDown, MdOutlineThumbUpAlt } from "react-icons/md";
+import {
+  MdThumbUp,
+  MdOutlineThumbUpAlt,
+  MdWatchLater,
+  MdOutlineWatchLater,
+} from "react-icons/md";
 import ShowMoreText from "react-show-more-text";
-
 import HelmetCustom from "../HelmetCustom";
 import { request } from "../../api";
-const VideoMetaData = ({ video: { snippet, statistics }, videoId }) => {
-  const { channelId, channelTitle, description, title, publishedAt } = snippet;
+import { useAuth } from "../../contexts/AuthContext";
+
+const VideoMetaData = ({
+  video: { snippet, statistics },
+  videoId,
+  watchLaterHandler,
+  likedHandler,
+}) => {
+  const {
+    channelId,
+    channelTitle,
+    description,
+    title,
+    publishedAt,
+    thumbnails: { medium },
+    resourceId,
+  } = snippet;
   const { viewCount, likeCount, dislikeCount } = statistics;
+  const { currentUser } = useAuth();
   const [channelIcon, setChannelIcon] = useState(null);
   const [liked, setLiked] = useState(false);
+  const [watchLater, setWatchLater] = useState(false);
+
   useEffect(() => {
     const get_channel_icon = async () => {
       const {
@@ -44,27 +65,62 @@ const VideoMetaData = ({ video: { snippet, statistics }, videoId }) => {
             <span className="mr-3">
               {liked ? (
                 <MdThumbUp
-                  size={26}
+                  size={30}
                   style={{
                     marginRight: "0.5rem",
+                    color: "aquamarine",
                   }}
                   onClick={() => setLiked(!liked)}
                 />
               ) : (
                 <MdOutlineThumbUpAlt
-                  size={26}
-                  onClick={() => setLiked(!liked)}
+                  size={30}
+                  onClick={() => {
+                    likedHandler(
+                      channelId,
+                      channelTitle,
+                      description,
+                      title,
+                      publishedAt,
+                      medium
+                    );
+                    setLiked(!liked);
+                  }}
                   style={{
                     marginRight: "0.5rem",
                   }}
                 />
               )}
-              {numeral(likeCount).format("0.a")}
+              {watchLater ? (
+                <MdWatchLater
+                  size={30}
+                  style={{
+                    marginRight: "0.5rem",
+                    color: "aquamarine",
+                  }}
+                  onClick={() => setWatchLater(!watchLater)}
+                />
+              ) : (
+                <MdOutlineWatchLater
+                  size={30}
+                  onClick={() => {
+                    watchLaterHandler(
+                      channelId,
+                      channelTitle,
+                      description,
+                      title,
+                      publishedAt,
+                      medium
+                    );
+                    setWatchLater(!watchLater);
+                  }}
+                  style={{
+                    marginRight: "0.5rem",
+                  }}
+                />
+              )}
+              {/* {numeral(likeCount).format("0.a")} */}
             </span>
-            {/* <span className="mr-3" style={{ marginLeft: "0.5rem" }}>
-              <MdThumbDown size={26} style={{ marginRight: "0.3rem" }} />{" "}
-              {numeral(dislikeCount).format("0.a")}
-            </span> */}
           </div>
         </div>
       </div>
@@ -78,6 +134,27 @@ const VideoMetaData = ({ video: { snippet, statistics }, videoId }) => {
             <span>{channelTitle}</span>
           </div>
         </div>
+        {/* <div className="videoMetaData__channel_actions">
+          <span className="mr-3">
+            {liked ? (
+              <MdThumbUp
+                size={26}
+                style={{
+                  marginRight: "0.5rem",
+                }}
+                onClick={() => setLiked(!liked)}
+              />
+            ) : (
+              <MdOutlineWatchLater
+                size={26}
+                onClick={() => setLiked(!liked)}
+                style={{
+                  marginRight: "0.5rem",
+                }}
+              />
+            )}
+          </span>
+        </div> */}
       </div>
       <div className="videoMetaData__description">
         <ShowMoreText

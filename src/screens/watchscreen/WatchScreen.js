@@ -2,18 +2,23 @@ import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { useParams } from "react-router-dom";
-// import Comments from "../../components/comments/Comments";
+
 import VideoHorizontal from "../../components/videoHorizontal/VideoHorizontal";
 import VideoMetaData from "../../components/videoMetaData/VideoMetaData";
 import { Helmet } from "react-helmet";
 import "./_watchScreen.scss";
 import { getRelatedVideos, getVideoByID } from "../../api";
+import { db } from "../../firebase";
+import { useAuth } from "../../contexts/AuthContext";
+import { collection, query, addDoc, deleteDoc, doc } from "firebase/firestore";
 
 const WatchScreen = () => {
+  const { currentUser } = useAuth();
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [video, setVideo] = useState();
   const [relatedVideos, setRelatedVideos] = useState();
+  const [docID, setDocID] = useState();
 
   const getSelectedVideo = async () => {
     setLoading(true);
@@ -41,19 +46,64 @@ const WatchScreen = () => {
     }
   };
 
+  const watchLaterHandler = async (
+    channelId,
+    channelTitle,
+    description,
+    title,
+    publishedAt,
+    medium
+  ) => {
+    const q = query(collection(db, `users/${currentUser.uid}/watchLater`));
+    const addedVideo = await addDoc(q, {
+      id: id,
+      snippet: {
+        channelId,
+        channelTitle,
+        description,
+        title,
+        publishedAt,
+        thumbnails: {
+          medium: medium,
+        },
+      },
+    });
+  };
+
+  const likedHandler = async (
+    channelId,
+    channelTitle,
+    description,
+    title,
+    publishedAt,
+    medium
+  ) => {
+    const q = query(collection(db, `users/${currentUser.uid}/liked`));
+    const addedVideo = await addDoc(q, {
+      id: id,
+      snippet: {
+        channelId,
+        channelTitle,
+        description,
+        title,
+        publishedAt,
+        thumbnails: {
+          medium: medium,
+        },
+      },
+    });
+  };
+
+  // const unlikeHandler = async (id) => {
+  //   await deleteDoc(doc(db, `users/${currentUser.uid}/liked/${id}`));
+  // };
+
   useEffect(() => {
     getSelectedVideo();
     getRecomendations();
   }, [id]);
 
-  //   const { videos, loading: relatedVideosLoading } = useSelector(
-  //     (state) => state.relatedVideos
-  //   );
-
-  //   const { video, loading } = useSelector((state) => state.selectedVideo);
-
   return (
-    // <div>WatchScreen</div>
     <Row>
       <Helmet>
         <title>{video?.snippet?.title}</title>
@@ -70,7 +120,12 @@ const WatchScreen = () => {
           ></iframe>
         </div>
         {!loading ? (
-          <VideoMetaData video={video} videoId={id} />
+          <VideoMetaData
+            video={video}
+            videoId={id}
+            watchLaterHandler={watchLaterHandler}
+            likedHandler={likedHandler}
+          />
         ) : (
           <h6>Loading...</h6>
         )}

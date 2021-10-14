@@ -18,10 +18,15 @@
     display: none;
   }
   &__logo {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-    display: block;
+    width: 10rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: aquamarine;
+
+    h4 {
+      margin: 0;
+    }
   }
 
   form {

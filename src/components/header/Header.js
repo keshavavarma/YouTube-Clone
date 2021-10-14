@@ -6,6 +6,7 @@ import { MdNotifications, MdApps } from "react-icons/md";
 import Avatar from "@mui/material/Avatar";
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router";
+import { RiReactjsFill } from "react-icons/ri";
 
 const Header = ({ handleToggleSidebar }) => {
   const { currentUser } = useAuth();
@@ -24,12 +25,11 @@ const Header = ({ handleToggleSidebar }) => {
         size={26}
         onClick={() => handleToggleSidebar()}
       />
-
-      <img
-        src="http://pngimg.com/uploads/youtube/youtube_PNG2.png"
-        alt=""
-        className="header__logo"
-      />
+      <div className="header__logo">
+        <RiReactjsFill size={40} />
+        {/* <img src={<RiReactjsFill />} alt="" className="header__logo" /> */}
+        <h4>ReactTube</h4>
+      </div>
 
       <form onSubmit={searchHandler}>
         <input

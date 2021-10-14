@@ -6,6 +6,17 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
 import { auth } from "../../firebase";
 import { updateProfile } from "@firebase/auth";
+import { db } from "../../firebase";
+import {
+  collection,
+  query,
+  addDoc,
+  doc,
+  updateDoc,
+  onSnapshot,
+  orderBy,
+  serverTimestamp,
+} from "firebase/firestore";
 const Register = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -14,8 +25,9 @@ const Register = () => {
   const passwordRef = useRef();
   const passwordConfirmationRef = useRef();
   const nameRef = useRef();
-  const { signup } = useAuth();
+  const { signup, currentUser } = useAuth();
   const history = useHistory();
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -30,6 +42,7 @@ const Register = () => {
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);
       const user = auth.currentUser;
+      createUser(user.uid);
       updateProfile(user, {
         displayName: nameRef.current.value,
       });
@@ -41,6 +54,12 @@ const Register = () => {
       setError(error.message);
       setLoading(false);
     }
+  };
+
+  const createUser = async (id) => {
+    const newUser = await addDoc(collection(db, "users"), {
+      userID: id,
+    });
   };
 
   return (

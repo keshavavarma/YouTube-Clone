@@ -10,7 +10,13 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Col, Row } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
-const VideoHorizontal = ({ video, searchScreen, subScreen }) => {
+const VideoHorizontal = ({
+  video,
+  searchScreen,
+  subScreen,
+  watchScreen,
+  docID,
+}) => {
   const {
     id,
     snippet: {
@@ -20,7 +26,7 @@ const VideoHorizontal = ({ video, searchScreen, subScreen }) => {
       title,
       publishedAt,
       thumbnails: { medium },
-      resourceId,
+      // resourceId,
     },
   } = video;
 
@@ -66,12 +72,11 @@ const VideoHorizontal = ({ video, searchScreen, subScreen }) => {
 
   const history = useHistory();
 
-  const _channelId = resourceId?.channelId || channelId;
+  // const _channelId = resourceId?.channelId || channelId;
 
   const handleClick = () => {
-    isVideo
-      ? history.push(`/watch/${id.videoId}`)
-      : history.push(`/channel/${_channelId}`);
+    isVideo && history.push(`/watch/${watchScreen ? id : id.videoId}`);
+    // : history.push(`/channel/${_channelId}`);
   };
 
   const thumbnail = !isVideo && "videoHorizontal__thumbnail-channel";
@@ -83,7 +88,7 @@ const VideoHorizontal = ({ video, searchScreen, subScreen }) => {
     >
       <Col
         xs={6}
-        md={searchScreen || subScreen ? 4 : 6}
+        md={searchScreen || watchScreen || subScreen ? 4 : 6}
         className="videoHorizontal__left"
       >
         <LazyLoadImage
@@ -98,7 +103,7 @@ const VideoHorizontal = ({ video, searchScreen, subScreen }) => {
       </Col>
       <Col
         xs={6}
-        md={searchScreen || subScreen ? 8 : 6}
+        md={searchScreen || watchScreen || subScreen ? 8 : 6}
         className="p-0 videoHorizontal__right"
       >
         <p className="mb-1 videoHorizontal__title">{title}</p>
@@ -110,7 +115,7 @@ const VideoHorizontal = ({ video, searchScreen, subScreen }) => {
           </div>
         )}
 
-        {(searchScreen || subScreen) && (
+        {(searchScreen || watchScreen || subScreen) && (
           <p className="mt-1 videoHorizontal__desc">{description}</p>
         )}
 
