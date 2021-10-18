@@ -18,7 +18,7 @@ export const getPopularVideos = async (pageToken = "") => {
         pageToken: pageToken,
       },
     });
-    console.log(response);
+    // console.log(response);
     return response;
   } catch (error) {
     console.log(error.message);
@@ -33,7 +33,7 @@ export const getVideoByID = async (id) => {
         id: id,
       },
     });
-    console.log(response);
+    // console.log(response);
     return response;
   } catch (error) {
     console.log(error.message);
@@ -51,7 +51,7 @@ export const getRelatedVideos = async (id) => {
         type: "video",
       },
     });
-    console.log(response);
+    // console.log(response);
     return response;
   } catch (error) {
     console.log(error.message);
@@ -69,7 +69,7 @@ export const getVideosByKeyword = async (keyword) => {
         videoLicense: "any",
       },
     });
-    console.log(response);
+    // console.log(response);
     return response;
   } catch (error) {
     console.log(error.message);

@@ -38,7 +38,6 @@ const WatchScreen = () => {
       setLoading(false);
     } else {
       setVideo(response.data.items[0]);
-      console.log("IN WatchScreen ", response.data.items[0]);
       setLoading(false);
     }
   };
@@ -51,7 +50,6 @@ const WatchScreen = () => {
       setLoading(false);
     } else {
       setRelatedVideos(response.data.items);
-      console.log("IN WatchScreen related Videos", response.data.items);
       setLoading(false);
     }
   };
@@ -140,7 +138,6 @@ const WatchScreen = () => {
       );
     });
     setLoading(false);
-    console.log("watchLater videos in watchscreen", watchLaterVideos);
     return unsub;
   };
 
@@ -156,7 +153,6 @@ const WatchScreen = () => {
       );
     });
     setLoading(false);
-    console.log("liked videos in watchscreen", likedVideos);
     return unsub;
   };
   useEffect(() => {

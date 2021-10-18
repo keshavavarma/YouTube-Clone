@@ -24,7 +24,6 @@ const WatchLaterScreen = () => {
     });
 
     setLoading(false);
-    console.log(videos);
 
     return unsub;
   };

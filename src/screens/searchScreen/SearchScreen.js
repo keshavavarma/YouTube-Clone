@@ -20,7 +20,6 @@ const SearchScreen = () => {
       setLoading(false);
     } else {
       setVideos(response.data.items);
-      console.log("IN SearchScreen  Videos", response.data.items);
       setLoading(false);
     }
   };

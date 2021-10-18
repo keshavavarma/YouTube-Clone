@@ -24,7 +24,6 @@ const LikedVideoScreen = () => {
         );
       });
       setLoading(false);
-      console.log(videos);
       return unsub;
     };
     getLikedVideos();

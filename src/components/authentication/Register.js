@@ -113,7 +113,11 @@ const Register = () => {
           {loading ? <CircularProgress color="inherit" /> : "Register"}
         </button>
         <p>
-          Have an Account? <Link to="/Login"> Login</Link>
+          Have an Account?{" "}
+          <Link to="/Login" className="login-link">
+            {" "}
+            Login
+          </Link>
         </p>
       </form>
     </div>
