@@ -31,7 +31,10 @@
       background-color: $border-color;
     }
   }
-
+  .selected {
+    background-color: aquamarine;
+    color: black;
+  }
   hr {
     background-color: $border-color;
   }
