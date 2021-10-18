@@ -5,16 +5,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 import VideoHorizontal from "../../components/videoHorizontal/VideoHorizontal";
 import { db } from "../../firebase";
 import { useAuth } from "../../contexts/AuthContext";
-import {
-  collection,
-  query,
-  addDoc,
-  doc,
-  updateDoc,
-  onSnapshot,
-  orderBy,
-  serverTimestamp,
-} from "firebase/firestore";
+import { collection, query, onSnapshot } from "firebase/firestore";
 
 const WatchLaterScreen = () => {
   const { currentUser } = useAuth();
@@ -31,8 +22,10 @@ const WatchLaterScreen = () => {
         }))
       );
     });
+
     setLoading(false);
     console.log(videos);
+
     return unsub;
   };
 

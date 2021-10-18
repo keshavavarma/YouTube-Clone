@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { getPopularVideos } from "../../api";
-import CategoriesBar from "../../components/categoriesBar/CategoriesBar";
+// import CategoriesBar from "../../components/categoriesBar/CategoriesBar";
 import CircularProgress from "@mui/material/CircularProgress";
 import Video from "../../components/video/Video";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -11,6 +11,7 @@ const HomeScreen = () => {
   const [videos, setVideos] = useState();
   const [nextPageToken, setNextPageToken] = useState();
   const [loading, setLoading] = useState(false);
+  const [fetch, setFetch] = useState(false);
 
   const getVideos = async () => {
     setLoading(true);
@@ -37,6 +38,12 @@ const HomeScreen = () => {
       console.log("IN Homescreen videos", videos);
     }
   };
+  useEffect(() => {
+    if (fetch) {
+      fetchData();
+    }
+  }, []);
+
   useEffect(() => {
     getVideos();
   }, []);

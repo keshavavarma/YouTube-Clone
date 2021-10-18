@@ -43,13 +43,14 @@ const VideoHorizontal = ({
       } = await request("/videos", {
         params: {
           part: "contentDetails,statistics",
-          id: id.videoId,
+          id: id.videoId ? id.videoId : id,
         },
       });
       setDuration(items[0].contentDetails.duration);
       setViews(items[0].statistics.viewCount);
     };
     if (isVideo) get_video_details();
+    return console.log("VideoHorizontal: get_video_details cleanup ");
   }, [id, isVideo]);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ const VideoHorizontal = ({
       setChannelIcon(items[0].snippet.thumbnails.default);
     };
     get_channel_icon();
+    return console.log("VideoHorizontal: get_channel_icon cleanup ");
   }, [channelId]);
 
   const seconds = moment.duration(duration).asSeconds();

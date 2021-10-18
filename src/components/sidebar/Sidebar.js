@@ -5,9 +5,7 @@ import {
   MdThumbUp,
   MdOutlineWatchLater,
   MdHome,
-  MdOutlineExplore,
 } from "react-icons/md";
-import { RiPlayList2Fill } from "react-icons/ri";
 import { useHistory } from "react-router";
 
 const Sidebar = ({ sidebar, handleToggleSidebar, logout }) => {

@@ -5,38 +5,28 @@ import { SkeletonTheme } from "react-loading-skeleton";
 import VideoHorizontal from "../../components/videoHorizontal/VideoHorizontal";
 import { db } from "../../firebase";
 import { useAuth } from "../../contexts/AuthContext";
-import {
-  collection,
-  query,
-  addDoc,
-  doc,
-  updateDoc,
-  onSnapshot,
-  orderBy,
-  serverTimestamp,
-} from "firebase/firestore";
+import { collection, query, onSnapshot } from "firebase/firestore";
 
 const LikedVideoScreen = () => {
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [videos, setVideos] = useState();
 
-  const getLikedVideos = async () => {
-    const q = query(collection(db, `users/${currentUser.uid}/liked`));
-    const unsub = onSnapshot(q, (snapshot) => {
-      setVideos(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        }))
-      );
-    });
-    setLoading(false);
-    console.log(videos);
-    return unsub;
-  };
-
   useEffect(() => {
+    const getLikedVideos = async () => {
+      const q = query(collection(db, `users/${currentUser.uid}/liked`));
+      const unsub = onSnapshot(q, (snapshot) => {
+        setVideos(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+        );
+      });
+      setLoading(false);
+      console.log(videos);
+      return unsub;
+    };
     getLikedVideos();
   }, []);
 

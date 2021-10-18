@@ -15,9 +15,10 @@ import {
   query,
   addDoc,
   deleteDoc,
-  doc,
   where,
   onSnapshot,
+  doc,
+  getDocs,
 } from "firebase/firestore";
 
 const WatchScreen = () => {
@@ -28,7 +29,6 @@ const WatchScreen = () => {
   const [watchLaterVideos, setWatchLaterVideos] = useState();
   const [likedVideos, setLikedVideos] = useState();
   const [relatedVideos, setRelatedVideos] = useState();
-  const [docID, setDocID] = useState();
 
   const getSelectedVideo = async () => {
     setLoading(true);
@@ -65,7 +65,7 @@ const WatchScreen = () => {
     medium
   ) => {
     const q = query(collection(db, `users/${currentUser.uid}/watchLater`));
-    const addedVideo = await addDoc(q, {
+    await addDoc(q, {
       id: id,
       snippet: {
         channelId,
@@ -89,7 +89,7 @@ const WatchScreen = () => {
     medium
   ) => {
     const q = query(collection(db, `users/${currentUser.uid}/liked`));
-    const addedVideo = await addDoc(q, {
+    await addDoc(q, {
       id: id,
       snippet: {
         channelId,
@@ -109,7 +109,11 @@ const WatchScreen = () => {
       collection(db, `users/${currentUser.uid}/liked`),
       where("id", "==", id)
     );
-    await deleteDoc(q);
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      deleteDoc(doc.ref);
+    });
+    return querySnapshot;
   };
 
   const removeWatchLater = async () => {
@@ -117,10 +121,15 @@ const WatchScreen = () => {
       collection(db, `users/${currentUser.uid}/watchLater`),
       where("id", "==", id)
     );
-    await deleteDoc(q);
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      deleteDoc(doc.ref);
+    });
+    return querySnapshot;
   };
 
   const getWatchLaterVideos = async () => {
+    setLoading(true);
     const q = query(collection(db, `users/${currentUser.uid}/watchLater`));
     const unsub = onSnapshot(q, (snapshot) => {
       setWatchLaterVideos(
@@ -131,11 +140,12 @@ const WatchScreen = () => {
       );
     });
     setLoading(false);
-    console.log(watchLaterVideos);
+    console.log("watchLater videos in watchscreen", watchLaterVideos);
     return unsub;
   };
 
   const getLikedVideos = async () => {
+    setLoading(true);
     const q = query(collection(db, `users/${currentUser.uid}/liked`));
     const unsub = onSnapshot(q, (snapshot) => {
       setLikedVideos(
@@ -146,22 +156,24 @@ const WatchScreen = () => {
       );
     });
     setLoading(false);
-    console.log(likedVideos);
+    console.log("liked videos in watchscreen", likedVideos);
     return unsub;
   };
-
   useEffect(() => {
-    getSelectedVideo();
-    getRecomendations();
     getWatchLaterVideos();
     getLikedVideos();
   }, [id]);
 
+  useEffect(() => {
+    getSelectedVideo();
+    getRecomendations();
+  }, [id]);
+
   return (
     <Row>
-      <Helmet>
+      {/* <Helmet>
         <title>{video?.snippet?.title}</title>
-      </Helmet>
+      </Helmet> */}
       <Col lg={8}>
         <div className="watchScreen__player">
           <iframe

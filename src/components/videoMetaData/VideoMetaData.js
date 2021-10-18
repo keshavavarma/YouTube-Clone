@@ -11,7 +11,6 @@ import {
 import ShowMoreText from "react-show-more-text";
 import HelmetCustom from "../HelmetCustom";
 import { request } from "../../api";
-import { useAuth } from "../../contexts/AuthContext";
 
 const VideoMetaData = ({
   video: { snippet, statistics },
@@ -30,14 +29,13 @@ const VideoMetaData = ({
     title,
     publishedAt,
     thumbnails: { medium },
-    resourceId,
   } = snippet;
-  const { viewCount, likeCount, dislikeCount } = statistics;
-  const { currentUser } = useAuth();
+  const { viewCount } = statistics;
+  // const { currentUser } = useAuth();
   const [channelIcon, setChannelIcon] = useState(null);
-  const [liked, setLiked] = useState(false);
-  const [watchLater, setWatchLater] = useState(false);
-
+  // const [liked, setLiked] = useState(false);
+  // const [watchLater, setWatchLater] = useState(false);
+  let docId;
   useEffect(() => {
     const get_channel_icon = async () => {
       const {
@@ -50,9 +48,16 @@ const VideoMetaData = ({
       });
       setChannelIcon(items[0].snippet.thumbnails.default);
     };
+
     get_channel_icon();
   }, [channelId]);
 
+  useEffect(() => {
+    // console.log("videoId", videoId);
+    // const docId = likedVideos.filter((video) => video.data.id === videoId);
+    // console.log("video.id", docId[0].id);
+    // console.log("watchLater videos", watchLaterVideos);
+  }, []);
   return (
     <div className="py-2 videoMetaData">
       <HelmetCustom title={title} description={description} />
@@ -68,8 +73,8 @@ const VideoMetaData = ({
           <div>
             <span className="mr-3">
               {likedVideos &&
-              likedVideos.filter((video) => video.id === videoId).length !==
-                0 ? (
+              likedVideos.filter((video) => video.data.id === videoId)
+                .length !== 0 ? (
                 <MdThumbUp
                   size={30}
                   style={{
@@ -101,7 +106,7 @@ const VideoMetaData = ({
                 />
               )}
               {watchLaterVideos &&
-              watchLaterVideos.filter((video) => video.id === videoId)
+              watchLaterVideos.filter((video) => video.data.id === videoId)
                 .length !== 0 ? (
                 <MdWatchLater
                   size={30}

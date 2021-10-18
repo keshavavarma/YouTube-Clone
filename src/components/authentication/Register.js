@@ -7,16 +7,7 @@ import { Link, useHistory } from "react-router-dom";
 import { auth } from "../../firebase";
 import { updateProfile } from "@firebase/auth";
 import { db } from "../../firebase";
-import {
-  collection,
-  query,
-  addDoc,
-  doc,
-  updateDoc,
-  onSnapshot,
-  orderBy,
-  serverTimestamp,
-} from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 const Register = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -25,7 +16,7 @@ const Register = () => {
   const passwordRef = useRef();
   const passwordConfirmationRef = useRef();
   const nameRef = useRef();
-  const { signup, currentUser } = useAuth();
+  const { signup } = useAuth();
   const history = useHistory();
 
   const submitHandler = async (e) => {
@@ -57,7 +48,7 @@ const Register = () => {
   };
 
   const createUser = async (id) => {
-    const newUser = await addDoc(collection(db, "users"), {
+    await addDoc(collection(db, "users"), {
       userID: id,
     });
   };
