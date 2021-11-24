@@ -73,12 +73,24 @@ const Login = () => {
         </button>
         <button
           disabled={loading}
+          className="register_button"
+          onClick={() => {
+            emailRef.current.value = "admin@gmail.com";
+            passwordRef.current.value = "admin123";
+            console.log("entered");
+          }}
+        >
+          {loading ? <CircularProgress color="inherit" /> : "Guest Login"}
+        </button>
+        <button
+          disabled={loading}
           className="register_button_google"
           onClick={googleHandler}
         >
           <GoogleIcon />
           <span>Login</span>
         </button>
+
         <p>
           Don't have an Account?
           <Link to="/Register" className="login-link">

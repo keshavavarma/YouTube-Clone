@@ -44,8 +44,8 @@ const Header = ({ handleToggleSidebar }) => {
       </form>
 
       <div className="header__icons">
-        <MdNotifications size={28} />
-        <MdApps size={28} />
+        {/* <MdNotifications size={28} />
+        <MdApps size={28} /> */}
         <Avatar
           src={
             currentUser &&
